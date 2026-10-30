@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escola Pública x Particular</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: menu vertical fixo à esquerda + área de conteúdo; cada item do menu é um "slide" */
+  :root {
+    --ink: #172033; --ink-2: #4a5468; --ink-3: #7b8498;
+    --paper: #f4f1ec; --card: #ffffff; --line: #e4ded4;
+    --pub: #0e7c86; --pub-soft: #d5eef0; --pub-deep: #0a5a61;
+    --par: #e2572b; --par-soft: #fbe2d8; --par-deep: #9c3714;
+    --jun: #3b3f8f; --jun-soft: #e3e4f5;
+    --sun: #f2b134; --sun-soft: #fdf0d2;
+    --plum: #7a3e9d; --plum-soft: #efe2f6;
+    --leaf: #3c8d4f; --leaf-soft: #dff0e2;
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); }
+  .app { display: grid; grid-template-columns: 268px 1fr; min-height: 100vh; background: linear-gradient(90deg, var(--ink) 268px, transparent 268px); }
+
+  /* ---------- menu lateral ---------- */
+  aside { background: var(--ink); color: #fff; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; padding: 24px 16px 18px; }
+  .brand { display: grid; gap: 6px; padding: 0 8px; }
+  .brand .eyebrow { font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--sun); font-weight: 700; }
+  .brand h1 { font-family: var(--display); font-size: 1.35rem; line-height: 1.15; margin: 0; font-weight: 700; }
+  .brand .who { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .dot { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 600; color: #cfd5e2; }
+  .dot i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .menu { display: grid; gap: 4px; }
+  .group { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: #8d97ad; font-weight: 700; padding: 12px 10px 4px; }
+  .tab { border: 0; background: transparent; color: #cfd5e2; font: 600 .92rem var(--body); padding: 9px 10px; border-radius: 12px; cursor: pointer; display: grid; grid-template-columns: 26px 30px 1fr; align-items: center; gap: 8px; text-align: left; width: 100%; transition: background .15s; }
+  .tab .n { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.1); font-size: .75rem; color: #fff; }
+  .tab .ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: rgba(255,255,255,.07); }
+  .tab .ic svg { width: 18px; height: 18px; }
+  .tab:hover { background: rgba(255,255,255,.07); color: #fff; }
+  .tab[aria-selected="true"] { background: #fff; color: var(--ink); }
+  .tab[aria-selected="true"] .n { background: var(--sun); color: var(--ink); }
+  .tab[aria-selected="true"] .ic { background: var(--paper); }
+  .tab:focus-visible, button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+  .aside-foot { margin-top: auto; display: grid; gap: 8px; padding: 0 4px; }
+  .present { border: 1px solid rgba(255,255,255,.25); background: transparent; color: #fff; font: 600 .85rem var(--body); padding: 9px 12px; border-radius: 999px; cursor: pointer; }
+  .present:hover { background: rgba(255,255,255,.1); }
+  .hint { font-size: .72rem; color: #8d97ad; text-align: center; }
+
+  /* ---------- conteúdo ---------- */
+  main { min-width: 0; padding: 28px clamp(16px, 3vw, 40px) 56px; }
+  .inner { max-width: 74rem; margin: 0 auto; }
+  section.slide { display: grid; gap: 22px; animation: rise .45s ease both; }
+  @keyframes rise { from { opacity: .001; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { section.slide { animation: none; } .bar, .stack span, .gauge b { transition: none !important; } }
+  .hero { border-radius: 18px; padding: 26px 28px; color: #fff; position: relative; overflow: hidden; display: grid; gap: 10px; }
+  .hero::after { content: ""; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,.12); }
+  .hero::before { content: ""; position: absolute; right: 90px; bottom: -70px; width: 140px; height: 140px; border-radius: 50%; background: rgba(242,177,52,.35); }
+  .hero.pub { background: var(--pub); } .hero.par { background: var(--par); } .hero.jun { background: var(--jun); } .hero.ink { background: var(--ink); }
+  .hero .kicker { color: #fff; opacity: .85; }
+  .hero h2 { color: #fff; max-width: 26ch; }
+  .hero p { max-width: 64ch; color: rgba(255,255,255,.92); position: relative; z-index: 1; }
+  .hero-ic { position: absolute; right: 26px; top: 22px; width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.18); display: grid; place-items: center; z-index: 1; }
+  .hero-ic svg { width: 36px; height: 36px; }
+  .slide-head { display: grid; gap: 6px; }
+  .kicker { font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+  h2 { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2.15rem); line-height: 1.15; margin: 0; font-weight: 700; text-wrap: balance; max-width: 30ch; position: relative; z-index: 1; }
+  h3 { font-size: 1.02rem; margin: 0; font-weight: 700; }
+  p { margin: 0; }
+  .muted { color: var(--ink-2); }
+  .small { font-size: .84rem; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+  .grid-2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+  .card-h { display: flex; gap: 10px; align-items: center; }
+  .card-h .ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+  .card-h .ic svg { width: 18px; height: 18px; }
+  .card.tone-sun { background: var(--sun-soft); border-color: #f1dca7; }
+  .card.tone-plum { background: var(--plum-soft); border-color: #dcc6e8; }
+  .card.tone-leaf { background: var(--leaf-soft); border-color: #c4e0c9; }
+
+  /* indicadores */
+  .kpis { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 1fr)); }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 14px; display: grid; gap: 10px; text-align: left; font: inherit; color: inherit; transition: transform .15s ease, box-shadow .15s ease; align-content: start; }
+  button.kpi { cursor: pointer; }
+  button.kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(23,32,51,.10); }
+  .kpi .icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+  .kpi .icon svg { width: 20px; height: 20px; }
+  .kpi-top { display: flex; gap: 10px; align-items: center; min-height: 54px; }
+  .kpi-label { font-weight: 700; font-size: .9rem; line-height: 1.25; }
+  .kpi-vals { display: grid; grid-template-columns: repeat(var(--cols, 2), 1fr); gap: 8px; }
+  .kv { display: grid; gap: 2px; }
+  .kv .big { font-family: var(--display); font-size: 1.9rem; line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .kv.solo .big { font-size: 2.6rem; }
+  .kv .who-s { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .kv.publica .big, .kv.publica .who-s { color: var(--pub); }
+  .kv.particular .big, .kv.particular .who-s { color: var(--par); }
+  .kv.juntas .big, .kv.juntas .who-s { color: var(--jun); }
+  .gauge { display: grid; gap: 4px; }
+  .gauge div { height: 7px; border-radius: 4px; background: #eee9e1; overflow: hidden; }
+  .gauge b { display: block; height: 100%; border-radius: 4px; width: 0; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+  .verdict { font-size: .78rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; justify-self: start; }
+  .verdict.publica { background: var(--pub-soft); color: var(--pub-deep); } .verdict.particular { background: var(--par-soft); color: var(--par-deep); } .verdict.tie { background: #ece7de; color: var(--ink-2); }
+  .ref { font-size: .78rem; color: var(--ink-2); }
+  .ref b { color: var(--jun); }
+
+  .callouts { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+  .callout { border-left: 5px solid var(--sun); background: var(--card); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; }
+  .callout h4 { margin: 0; font-size: .95rem; }
+  .callout p { font-size: .9rem; color: var(--ink-2); }
+  .bigquote { font-family: var(--display); font-size: clamp(1.15rem, 2.2vw, 1.5rem); line-height: 1.35; font-weight: 500; max-width: 50ch; }
+  .bigquote b { color: var(--par); }
+
+  /* legenda e controles */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .legend .lbl { font-size: .8rem; color: var(--ink-2); font-weight: 600; margin-right: 2px; }
+  .lg { display: inline-flex; gap: 7px; align-items: center; font-size: .82rem; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); cursor: pointer; color: var(--ink); font-family: var(--body); }
+  .lg i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .lg[aria-pressed="false"] { opacity: .45; }
+  .lg[aria-pressed="false"] i { background: transparent !important; outline: 2px solid var(--ink-3); outline-offset: -2px; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .seg button { border: 1px solid var(--line); background: var(--card); color: var(--ink-2); font: 600 .82rem var(--body); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* gráficos */
+  .chart { position: relative; min-width: 0; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .rows { display: grid; gap: 12px; }
+  .row { display: grid; grid-template-columns: minmax(7rem, 38%) 1fr; gap: 10px; align-items: center; }
+  .row .lab { font-size: .86rem; font-weight: 500; line-height: 1.25; display: flex; gap: 8px; align-items: center; }
+  .bars { display: grid; gap: 3px; }
+  .bline { display: flex; align-items: center; gap: 6px; }
+  .bar { height: 13px; border-radius: 3px; width: 0; transition: width .8s cubic-bezier(.2,.8,.2,1); min-width: 2px; }
+  .rows.solo .bar { height: 18px; }
+  .bv { font-size: .76rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+  .appgrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); }
+  .appt { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; padding: 10px; border-radius: 12px; border: 1px solid var(--line); background: #fcfbf8; }
+  .appt .logo { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; }
+  .appt .logo svg { width: 24px; height: 24px; }
+  .appt .nm { font-weight: 700; font-size: .88rem; }
+  .appt .bars { margin-top: 3px; }
+  .ico-inline { width: 26px; height: 26px; border-radius: 8px; display: inline-grid; place-items: center; color: #fff; flex: none; }
+  .ico-inline svg { width: 15px; height: 15px; }
+  .stackrow { display: grid; gap: 6px; }
+  .stack { display: flex; height: 34px; border-radius: 8px; overflow: hidden; background: #eee9e1; }
+  .stack span { display: grid; place-items: center; color: #fff; font-size: .78rem; font-weight: 700; width: 0; transition: width .9s cubic-bezier(.2,.8,.2,1); overflow: hidden; white-space: nowrap; }
+  .keys { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .8rem; color: var(--ink-2); }
+  .keys i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: .8rem; padding: 4px 10px 4px 8px; border-radius: 999px; font-weight: 600; background: #f0ebe3; color: var(--ink); display: inline-flex; gap: 6px; align-items: center; }
+  .chip i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  /* falas */
+  .filters { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+  .quotes { columns: 3 17rem; column-gap: 16px; }
+  .quotes.two { columns: 2 17rem; }
+  .q { break-inside: avoid; margin: 0 0 16px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px 14px; display: grid; gap: 10px; border-top: 5px solid var(--pub); }
+  .q.particular { border-top-color: var(--par); }
+  .q blockquote { margin: 0; font-family: var(--display); font-size: 1.05rem; line-height: 1.4; font-weight: 500; }
+  .q blockquote::before { content: "“"; color: var(--sun); font-size: 1.6rem; line-height: 0; vertical-align: -.35em; margin-right: 2px; }
+  .q .meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: .74rem; }
+  .q .meta span { padding: 2px 8px; border-radius: 999px; background: #f0ebe3; color: var(--ink-2); font-weight: 600; }
+  .q .meta .s.publica { background: var(--pub); color: #fff; } .q .meta .s.particular { background: var(--par); color: #fff; }
+  .empty { color: var(--ink-3); font-style: italic; }
+  .method li { margin-bottom: 6px; }
+  .navfoot { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; }
+  .ghost { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 600 .85rem var(--body); padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+  .ghost:disabled { opacity: .4; cursor: default; }
+  .tip { position: fixed; z-index: 50; pointer-events: none; background: var(--ink); color: #fff; padding: 8px 11px; border-radius: 8px; font-size: .8rem; line-height: 1.4; box-shadow: 0 8px 20px rgba(0,0,0,.2); max-width: 260px; opacity: 0; transition: opacity .12s; }
+  .tip b { color: var(--sun); }
+  body.presenting { font-size: 17.5px; }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; background: none; }
+    aside { position: sticky; top: 0; height: auto; z-index: 30; padding: 10px 12px; gap: 8px; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
+    .brand, .group, .aside-foot { display: none; }
+    .menu { display: flex; gap: 4px; }
+    .tab { grid-template-columns: 24px 26px auto; white-space: nowrap; width: auto; padding: 7px 10px; }
+    .tab .ic { width: 26px; height: 26px; }
+  }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; gap: 4px; } .hero { padding: 22px 18px; } .hero-ic { display: none; } }
+  /* ---------- tela de escolha da versão ---------- */
+  .chooser { position: fixed; inset: 0; z-index: 100; background: var(--ink); color: #fff; display: grid; place-items: center; overflow: auto;
+    padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+  .chooser::before { content: ""; position: absolute; width: 340px; height: 340px; border-radius: 50%; background: rgba(14,124,134,.45); right: -120px; top: -120px; }
+  .chooser::after { content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%; background: rgba(226,87,43,.45); left: -80px; bottom: -80px; }
+  .chooser-in { position: relative; z-index: 1; max-width: 46rem; width: 100%; display: grid; gap: 22px; text-align: center; justify-items: center; }
+  .chooser .eyebrow { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--sun); font-weight: 700; }
+  .chooser h1 { font-family: var(--display); font-size: clamp(1.7rem, 5vw, 2.6rem); line-height: 1.1; margin: 0; font-weight: 700; max-width: 20ch; text-wrap: balance; }
+  .chooser p { color: #cfd5e2; max-width: 46ch; }
+  .choices { display: grid; gap: 16px; width: 100%; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); margin-top: 6px; }
+  .choice { position: relative; background: #fff; color: var(--ink); border: 3px solid transparent; border-radius: 20px; padding: 26px 20px 22px; display: grid; gap: 8px; justify-items: center; cursor: pointer; font: inherit; transition: transform .15s ease, box-shadow .15s ease; }
+  .choice:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,.25); }
+  .choice.rec { border-color: var(--sun); }
+  .choice .big-ic { width: 76px; height: 76px; border-radius: 22px; display: grid; place-items: center; }
+  .choice .big-ic svg { width: 42px; height: 42px; }
+  .choice strong { font-size: 1.15rem; }
+  .choice span.d { font-size: .86rem; color: var(--ink-2); }
+  .badge { position: absolute; top: -13px; background: var(--sun); color: var(--ink); font-size: .72rem; font-weight: 700; padding: 3px 12px; border-radius: 999px; }
+  .switch { border: 1px solid rgba(255,255,255,.25); background: transparent; color: #cfd5e2; font: 600 .78rem var(--body); padding: 7px 12px; border-radius: 999px; cursor: pointer; }
+
+  /* ---------- versão celular ---------- */
+  .mtop, .mbot { display: none; }
+  body.mobile .app { grid-template-columns: 1fr; background: none; }
+  body.mobile aside { display: none; }
+  body.mobile main { padding: calc(74px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) calc(96px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); }
+  body.mobile .inner { max-width: 30rem; }
+  body.mobile .navfoot { display: none; }
+  body.mobile .mtop { display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 40; background: var(--ink); color: #fff; gap: 10px; align-items: center;
+    padding: calc(10px + env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) 10px max(14px, env(safe-area-inset-left, 0px)); }
+  .mtop .n { width: 28px; height: 28px; border-radius: 50%; background: var(--sun); color: var(--ink); display: grid; place-items: center; font-weight: 700; font-size: .85rem; flex: none; }
+  .mtop .ttl { flex: 1; min-width: 0; display: grid; line-height: 1.2; }
+  .mtop .ttl small { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--sun); font-weight: 700; }
+  .mtop .ttl b { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mtop button { border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; font: 700 .85rem var(--body); padding: 9px 12px; border-radius: 12px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+  .mtop button svg { width: 18px; height: 18px; }
+  body.mobile .mbot { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: rgba(255,255,255,.97); border-top: 1px solid var(--line);
+    padding: 10px max(14px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); }
+  .mbot button { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 700 .9rem var(--body); padding: 12px 10px; border-radius: 14px; cursor: pointer; }
+  .mbot button:disabled { opacity: .35; }
+  .mbot .nx { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .mdots { display: flex; gap: 5px; align-items: center; }
+  .mdots i { width: 7px; height: 7px; border-radius: 4px; background: var(--line); transition: width .2s; }
+  .mdots i.on { width: 20px; background: var(--sun); }
+  .sheet { position: fixed; inset: 0; z-index: 60; background: rgba(23,32,51,.55); display: flex; align-items: flex-end; }
+  .sheet-in { background: var(--ink); width: 100%; border-radius: 22px 22px 0 0; max-height: 86vh; overflow: auto; display: grid; gap: 4px;
+    padding: 12px max(14px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px)); animation: up .25s ease both; }
+  @keyframes up { from { transform: translateY(40px); opacity: .3; } to { transform: none; opacity: 1; } }
+  .sheet-in .grab { width: 44px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.3); justify-self: center; margin-bottom: 6px; }
+  .sheet .menu { display: grid; gap: 4px; }
+  .sheet .group { display: block; }
+  .sheet .tab { grid-template-columns: 26px 30px 1fr; width: 100%; white-space: normal; padding: 11px 10px; font-size: 1rem; }
+  .sheet .tab .ic { width: 30px; height: 30px; }
+  .sheet-foot { display: flex; justify-content: center; padding-top: 10px; }
+  body.mobile .row { grid-template-columns: 1fr; gap: 4px; }
+  body.mobile .hero { padding: 22px 18px; border-radius: 16px; }
+  body.mobile .hero-ic { display: none; }
+  body.mobile h2 { font-size: 1.5rem; }
+  body.mobile .bigquote { font-size: 1.12rem; }
+  body.mobile .grid, body.mobile .grid-2, body.mobile .callouts, body.mobile .kpis { grid-template-columns: 1fr; }
+  body.mobile .appgrid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  body.mobile .appt { grid-template-columns: 34px 1fr; gap: 8px; padding: 8px; }
+  body.mobile .appt .logo { width: 34px; height: 34px; border-radius: 10px; }
+  body.mobile .appt .logo svg { width: 19px; height: 19px; }
+  body.mobile .quotes, body.mobile .quotes.two { columns: 1; }
+  body.mobile .seg { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 2px; }
+  body.mobile .seg button { white-space: nowrap; padding: 8px 13px; }
+  body.mobile .filters { display: grid; gap: 10px; }
+  body.mobile .legend { gap: 6px; }
+  body.mobile .card { padding: 16px; }
+  body.mobile .kv.solo .big { font-size: 2.3rem; }
+</style>
+</head>
+<body>
+<div class="chooser" id="chooser" role="dialog" aria-modal="true" aria-labelledby="ch-title">
+  <div class="chooser-in">
+    <span class="eyebrow">Pesquisa com alunos · 2026</span>
+    <h1 id="ch-title">Habilidades digitais e mercado de trabalho</h1>
+    <p>Escola pública x escola particular. Escolha como você vai ver a apresentação.</p>
+    <div class="choices">
+      <button class="choice" data-mode="desktop"><span class="badge" hidden>Recomendado para esta tela</span><span class="big-ic" style="background:var(--pub-soft);color:var(--pub)" data-icon="monitor"></span><strong>Computador ou projetor</strong><span class="d">Menu lateral, gráficos lado a lado e modo tela cheia para apresentar.</span></button>
+      <button class="choice" data-mode="mobile"><span class="badge" hidden>Recomendado para esta tela</span><span class="big-ic" style="background:var(--par-soft);color:var(--par)" data-icon="phone"></span><strong>Celular</strong><span class="d">Uma coluna, botões grandes e troca de seção deslizando o dedo.</span></button>
+    </div>
+  </div>
+</div>
+
+<header class="mtop">
+  <span class="n" id="m-num">1</span>
+  <span class="ttl"><small id="m-group">Cada escola</small><b id="m-title">Escola pública</b></span>
+  <button id="m-menu" aria-haspopup="dialog"><span data-icon="apps"></span>Seções</button>
+</header>
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in" role="dialog" aria-label="Seções">
+    <span class="grab"></span>
+    <div class="menu" id="sheet-menu"></div>
+    <div class="sheet-foot"><button class="switch" data-switch>Trocar versão (computador / celular)</button></div>
+  </div>
+</div>
+<nav class="mbot" aria-label="Navegação">
+  <button id="m-prev">← Anterior</button>
+  <span class="mdots" id="m-dots"></span>
+  <button class="nx" id="m-next">Próxima →</button>
+</nav>
+
+<div class="app">
+  <aside>
+    <div class="brand">
+      <span class="eyebrow">Pesquisa com alunos · 2026</span>
+      <h1>Habilidades digitais e mercado de trabalho</h1>
+      <div class="who"><span class="dot"><i style="background:var(--pub)"></i>Pública</span><span class="dot"><i style="background:var(--par)"></i>Particular</span><span class="dot"><i style="background:#8f93e0"></i>Juntas</span></div>
+    </div>
+    <nav class="menu" role="tablist" aria-label="Seções" aria-orientation="vertical">
+      <div class="group">Cada escola</div>
+      <button class="tab" role="tab" data-tab="publica"><span class="n">1</span><span class="ic" data-icon="school"></span>Escola pública</button>
+      <button class="tab" role="tab" data-tab="particular"><span class="n">2</span><span class="ic" data-icon="school"></span>Escola particular</button>
+      <div class="group">As duas juntas</div>
+      <button class="tab" role="tab" data-tab="juntas"><span class="n">3</span><span class="ic" data-icon="compare"></span>Visão conjunta</button>
+      <button class="tab" role="tab" data-tab="habilidades"><span class="n">4</span><span class="ic" data-icon="radar"></span>Habilidades digitais</button>
+      <button class="tab" role="tab" data-tab="escola"><span class="n">5</span><span class="ic" data-icon="laptop"></span>Escola e tecnologia</button>
+      <button class="tab" role="tab" data-tab="futuro"><span class="n">6</span><span class="ic" data-icon="briefcase"></span>Futuro profissional</button>
+      <button class="tab" role="tab" data-tab="vozes"><span class="n">7</span><span class="ic" data-icon="quote"></span>Vozes dos alunos</button>
+      <div class="group">Sobre a pesquisa</div>
+      <button class="tab" role="tab" data-tab="metodo"><span class="n">8</span><span class="ic" data-icon="info"></span>Metodologia</button>
+    </nav>
+    <div class="aside-foot">
+      <button class="present" id="present">▶ Apresentar em tela cheia</button>
+      <span class="hint">Use as setas ← → do teclado para trocar de seção</span>
+      <button class="switch" data-switch>Trocar versão (computador / celular)</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="inner">
+      <!-- 1 e 2: concepção de cada escola (preenchidas pelo script) -->
+      <section class="slide" id="publica" data-panel data-school="publica"></section>
+      <section class="slide" id="particular" data-panel data-school="particular" hidden></section>
+
+      <!-- 3: visão conjunta -->
+      <section class="slide" id="juntas" data-panel hidden>
+        <div class="hero jun">
+          <span class="hero-ic" data-icon="compare"></span>
+          <span class="kicker">As duas escolas juntas</span>
+          <h2>O que une e o que separa as duas escolas</h2>
+          <p>Cada indicador mostra a escola pública, a escola particular e o resultado das duas juntas, somando todos os alunos.</p>
+        </div>
+        <p class="bigquote">Nas duas escolas, os alunos dão nota baixa para a frase “o que aprendo na escola é suficiente para conseguir um emprego”: <b data-m="suficiencia.publica"></b> na pública, <b data-m="suficiencia.particular"></b> na particular e <b data-m="suficiencia.juntas" style="color:var(--jun)"></b> com as duas juntas, numa escala de 0 a 5.</p>
+        <div class="kpis" id="kpis-juntas"></div>
+        <div class="callouts">
+          <div class="callout" style="border-color:var(--pub)"><h4>A pública confia mais em si</h4><p>Mesmo com menos acesso a computador, os alunos da pública se dão notas mais altas em IA e planilhas.</p></div>
+          <div class="callout" style="border-color:var(--par)"><h4>A particular ensina mais Office</h4><p>Mais alunos da particular dizem ter aprendido o Pacote Office na escola e já ter experiência com o que a profissão exige.</p></div>
+          <div class="callout" style="border-color:var(--jun)"><h4>Juntas, o pedido é o mesmo</h4><p>Somando as duas escolas, Excel e Pacote Office lideram o que os alunos querem aprender para o primeiro emprego.</p></div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="slide" id="habilidades" data-panel hidden>
+        <div class="slide-head">
+          <span class="kicker" style="color:var(--pub)">Autoavaliação de 0 a 5</span>
+          <h2>Como os alunos avaliam as próprias habilidades</h2>
+          <p class="muted">Ligue ou desligue cada escola e as duas juntas. Toque ou passe o mouse sobre os pontos para ver os valores.</p>
+        </div>
+        <div class="legend" data-legend></div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-h"><span class="ic" style="background:var(--jun-soft);color:var(--jun)" data-icon="radar"></span><h3>Perfil das escolas</h3></div>
+            <p class="muted small">Quanto mais para fora, maior a nota média.</p>
+            <div class="chart" id="radar"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="ic" style="background:var(--sun-soft);color:#9a6a00" data-icon="compare"></span><h3>Diferença em cada pergunta</h3></div>
+            <p class="muted small">A linha amarela liga a pública à particular; quanto mais longa, maior a diferença. O losango é a média das duas juntas.</p>
+            <div class="chart" id="dumbbell"></div>
+          </div>
+        </div>
+        <div class="card tone-sun">
+          <div class="card-h"><span class="ic" style="background:#fff;color:#9a6a00" data-icon="chart"></span><h3>Como as notas se distribuem</h3></div>
+          <p class="muted small">Escolha uma pergunta para ver o percentual de alunos que deu cada nota.</p>
+          <div class="seg" id="histq"></div>
+          <div class="chart" id="hist"></div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="slide" id="escola" data-panel hidden>
+        <div class="slide-head">
+          <span class="kicker" style="color:var(--plum)">Acesso e sala de aula</span>
+          <h2>O que a escola oferece em tecnologia</h2>
+          <p class="muted">Percentual de alunos que marcou cada opção. Onde se podia marcar mais de uma, a soma passa de 100%.</p>
+        </div>
+        <div class="legend" data-legend></div>
+        <div class="grid">
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--plum-soft);color:var(--plum)" data-icon="wifi"></span><h3>Meio de acesso à internet</h3></div><p class="muted small">Na pública, alguns alunos marcaram mais de uma opção.</p><div class="rows" data-dist="acesso"></div></div>
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--plum-soft);color:var(--plum)" data-icon="monitor"></span><h3>As aulas usam tecnologia além de pesquisa?</h3></div><p class="muted small">Opinião sobre as aulas atuais.</p><div class="rows" data-dist="aulas"></div></div>
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--plum-soft);color:var(--plum)" data-icon="cap"></span><h3>O que aprendeu a usar profissionalmente na escola</h3></div><p class="muted small">Pode marcar mais de uma.</p><div class="rows" data-dist="aprendeu"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="ic" style="background:var(--sun-soft);color:#9a6a00" data-icon="apps"></span><h3>Aplicativos que usa ou já usou</h3></div>
+          <p class="muted small">ChatGPT/Gemini e Canva são quase universais nas duas escolas. Claude e Blender foram escritos à mão por alunos da particular.</p>
+          <div class="appgrid" data-apps></div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="slide" id="futuro" data-panel hidden>
+        <div class="slide-head">
+          <span class="kicker" style="color:var(--leaf)">Carreira e primeiro emprego</span>
+          <h2>O que os alunos querem ser e o quanto estão preparados</h2>
+        </div>
+        <div class="card tone-leaf">
+          <div class="card-h"><span class="ic" style="background:#fff;color:var(--leaf)" data-icon="briefcase"></span><h3>Área da profissão desejada</h3></div>
+          <p class="muted small">A pública tem mais alunos mirando negócios e ofícios técnicos; a particular concentra saúde, engenharia e direito. Toque ou passe o mouse sobre as faixas.</p>
+          <div class="stackrow"><span class="small" style="font-weight:700;color:var(--pub)">Escola pública</span><div class="stack" data-stack="publica"></div></div>
+          <div class="stackrow"><span class="small" style="font-weight:700;color:var(--par)">Escola particular</span><div class="stack" data-stack="particular"></div></div>
+          <div class="stackrow"><span class="small" style="font-weight:700;color:var(--jun)">As duas juntas</span><div class="stack" data-stack="juntas"></div></div>
+          <div class="keys" data-areakeys></div>
+        </div>
+        <div class="legend" data-legend></div>
+        <div class="grid">
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--leaf-soft);color:var(--leaf)" data-icon="star"></span><h3>Já tem experiência com o que a profissão exige?</h3></div><p class="muted small">Entre os que responderam.</p><div class="rows" data-dist="experiencia"></div></div>
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--leaf-soft);color:var(--leaf)" data-icon="idcard"></span><h3>Perfil no LinkedIn</h3></div><p class="muted small">A maioria ainda não tem perfil.</p><div class="rows" data-dist="linkedin"></div></div>
+          <div class="card"><div class="card-h"><span class="ic" style="background:var(--leaf-soft);color:var(--leaf)" data-icon="team"></span><h3>Trabalho em equipe</h3></div><p class="muted small">Se gosta e se adapta bem.</p><div class="rows" data-dist="equipe"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card tone-plum"><div class="card-h"><span class="ic" style="background:#fff;color:var(--plum)" data-icon="barrier"></span><h3>Maior obstáculo para a escola preparar para o mercado</h3></div><p class="muted small">Respostas abertas agrupadas por tema.</p><div class="rows" data-dist="obstaculo"></div></div>
+          <div class="card tone-sun"><div class="card-h"><span class="ic" style="background:#fff;color:#9a6a00" data-icon="bulb"></span><h3>Habilidade digital que gostariam de aprender</h3></div><p class="muted small">Respostas abertas agrupadas por tema; uma resposta pode citar mais de um.</p><div class="rows" data-dist="pedido"></div></div>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="slide" id="vozes" data-panel hidden>
+        <div class="slide-head">
+          <span class="kicker" style="color:var(--par)">Evidências</span>
+          <h2>O que os alunos escreveram</h2>
+          <p class="muted">Respostas abertas, sem identificação. As da pública foram transcritas do papel com a ortografia corrigida.</p>
+        </div>
+        <div class="filters">
+          <div class="seg" id="fq-escola">
+            <button aria-pressed="true" data-v="">As duas juntas</button>
+            <button aria-pressed="false" data-v="Pública">Pública</button>
+            <button aria-pressed="false" data-v="Particular">Particular</button>
+          </div>
+          <div class="seg" id="fq-tema">
+            <button aria-pressed="true" data-v="obstaculo">Maior obstáculo</button>
+            <button aria-pressed="false" data-v="habilidade_desejada">O que querem aprender</button>
+            <button aria-pressed="false" data-v="habilidades_exigidas">O que a profissão exige</button>
+            <button aria-pressed="false" data-v="criatividade">Uso da criatividade</button>
+          </div>
+        </div>
+        <div class="quotes" id="quotes"></div>
+      </section>
+
+      <!-- 8 -->
+      <section class="slide" id="metodo" data-panel hidden>
+        <div class="hero ink">
+          <span class="hero-ic" data-icon="info"></span>
+          <span class="kicker">Como ler estes dados</span>
+          <h2>Metodologia e cuidados</h2>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Como a pesquisa foi feita</h3>
+            <ul class="method muted">
+              <li>Questionário anônimo com as mesmas perguntas nas duas escolas.</li>
+              <li>Escola pública: formulário em papel, digitalizado e transcrito.</li>
+              <li>Escola particular: formulário online respondido pelo celular.</li>
+              <li>Escalas de 0 (muito ruim) a 5 (muito bom). As médias ignoram respostas em branco.</li>
+              <li>“As duas juntas” soma todos os alunos das duas escolas num único grupo.</li>
+              <li>As respostas abertas sobre obstáculos e habilidades desejadas foram agrupadas por tema na análise.</li>
+            </ul>
+          </div>
+          <div class="card tone-sun">
+            <h3>Cuidados na interpretação</h3>
+            <ul class="method muted">
+              <li>As amostras são pequenas: poucas respostas mudam bastante os percentuais. Os resultados indicam tendências, não conclusões estatísticas.</li>
+              <li>Como a escola pública teve mais respondentes, ela pesa mais no resultado das duas juntas.</li>
+              <li>Papel e celular são formas diferentes de responder. No papel, alguns alunos marcaram mais de uma bolinha em perguntas de resposta única.</li>
+              <li>Em um formulário da pública, as perguntas 1 e 2 tinham várias bolinhas marcadas e ficaram em branco.</li>
+              <li>Muitos alunos da pública marcaram “Script” entre os aplicativos; podem ter entendido a opção de outro jeito.</li>
+              <li>Nenhum aluno da particular marcou Google Sheets, Illustrator ou Looker Studio. Vale conferir se essas opções existiam na versão online.</li>
+              <li>Notas de autoavaliação medem confiança, não domínio real da ferramenta.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="navfoot">
+        <button class="ghost" id="prev">← Anterior</button>
+        <button class="ghost" id="next">Próxima →</button>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="tip" id="tip" role="status"></div>
+
+<script>
+const DATA = [{"id": "PUB-01", "escola": "Pública", "idade": "16", "acesso": "Celular", "recursos": "4", "profissao": "Veterinária (animais silvestres)", "habilidades_exigidas": "Fazer o curso e se especializar", "tem_experiencia": "Não", "comunicacao": "5", "trabalho_equipe": "Gosto e me adapto", "planilhas": "0", "ia": "5", "prompts": "0", "linkedin": "Desatualizado", "criatividade": "Faz muito tempo que não faço um trabalho criativo", "apps": "ChatGPT/Gemini;Canva;Script", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "1", "obstaculo": "A colaboração dos alunos e a falta de vontade de ensinar os alunos", "habilidade_desejada": "Excel, eu não consigo entender", "area": "Saúde", "obst_tema": "Ensino, estrutura e engajamento", "pedido_tema": "Office e planilhas"}, {"id": "PUB-02", "escola": "Pública", "idade": "17", "acesso": "Celular", "recursos": "4", "profissao": "Biomédica (estética)", "habilidades_exigidas": "Tenho uma noção, mas não fui a fundo; não tenho certeza de qual profissão seguir", "tem_experiencia": "Não", "comunicacao": "3", "trabalho_equipe": "Gosto e me adapto", "planilhas": "5", "ia": "5", "prompts": "4", "linkedin": "Desatualizado", "criatividade": "Em apresentações de slides", "apps": "ChatGPT/Gemini;Canva;Excel;AutoCAD;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Pacote Office;IA", "suficiencia": "1", "obstaculo": "Falta melhoria na distribuição dos conteúdos", "habilidade_desejada": "Falar em público melhor e tecnologia básica", "area": "Saúde", "obst_tema": "Conteúdo desatualizado ou pouco útil", "pedido_tema": "Comunicação;Outros"}, {"id": "PUB-03", "escola": "Pública", "idade": "", "acesso": "", "recursos": "", "profissao": "Logística / Administração", "habilidades_exigidas": "Transporte de mercadoria, exportação, competência e responsabilidade", "tem_experiencia": "Não", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "4", "ia": "3", "prompts": "2", "linkedin": "Não tenho", "criatividade": "No trabalho", "apps": "ChatGPT/Gemini;Canva;Google Sheets;Excel", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "IA", "suficiencia": "0", "obstaculo": "Fazer treinamento em outras áreas no mundo do trabalho", "habilidade_desejada": "Todas", "area": "Negócios e gestão", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Outros"}, {"id": "PUB-04", "escola": "Pública", "idade": "17", "acesso": "Celular;Computador próprio", "recursos": "5", "profissao": "Engenheira", "habilidades_exigidas": "Sim, o básico é matemática", "tem_experiencia": "Sim", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "5", "ia": "5", "prompts": "4", "linkedin": "Não tenho", "criatividade": "Trabalho de artes", "apps": "ChatGPT/Gemini;Canva;Google Sheets;Excel;Power BI;Photoshop;AutoCAD;Script;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Nuvem;IA", "suficiencia": "0", "obstaculo": "A escola pública, principalmente à noite, não ensina quase nada", "habilidade_desejada": "Excel", "area": "Engenharia", "obst_tema": "Ensino, estrutura e engajamento", "pedido_tema": "Office e planilhas"}, {"id": "PUB-05", "escola": "Pública", "idade": "17", "acesso": "Celular;Computador compartilhado", "recursos": "3", "profissao": "Psicopedagoga", "habilidades_exigidas": "Saber lidar com crianças", "tem_experiencia": "Não", "comunicacao": "5", "trabalho_equipe": "Gosto e me adapto", "planilhas": "3", "ia": "3", "prompts": "3", "linkedin": "Atualizado", "criatividade": "Sempre precisamos, desde a pré-escola", "apps": "ChatGPT/Gemini;Canva;Google Sheets;Excel;Power BI;Script;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "IA", "suficiencia": "2", "obstaculo": "A escola não nos prepara", "habilidade_desejada": "Pacote Office", "area": "Educação, Direito e Humanas", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Office e planilhas"}, {"id": "PUB-06", "escola": "Pública", "idade": "17", "acesso": "Celular;Computador próprio", "recursos": "5", "profissao": "Empreendedor", "habilidades_exigidas": "Sim, comunicação e networking", "tem_experiencia": "Sim", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "3", "ia": "5", "prompts": "4", "linkedin": "Desatualizado", "criatividade": "Quando uma colega resolveu tomar a apresentação toda para ela", "apps": "ChatGPT/Gemini;Canva;Google Sheets;Excel;Adobe Acrobat;Photoshop;AutoCAD;Script;Looker Studio;PowerPoint", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "0", "obstaculo": "Conteúdo desatualizado para os dias de hoje", "habilidade_desejada": "Pacote Office", "area": "Negócios e gestão", "obst_tema": "Conteúdo desatualizado ou pouco útil", "pedido_tema": "Office e planilhas"}, {"id": "PUB-07", "escola": "Pública", "idade": "17", "acesso": "Celular", "recursos": "5", "profissao": "Engenheiro automotivo", "habilidades_exigidas": "Sim, cursos de desenho e faculdade de Engenharia Automotiva", "tem_experiencia": "Sim", "comunicacao": "3", "trabalho_equipe": "Gosto e me adapto", "planilhas": "5", "ia": "5", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Nas apresentações de trabalho", "apps": "ChatGPT/Gemini;Canva;Excel;Power BI;AutoCAD;Script;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Nenhuma", "suficiencia": "5", "obstaculo": "A falta de ensino técnico e o ensino básico nela", "habilidade_desejada": "Pacote Office e AutoCAD", "area": "Engenharia", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Office e planilhas;Software técnico"}, {"id": "PUB-08", "escola": "Pública", "idade": "17", "acesso": "Celular", "recursos": "3", "profissao": "Pedreiro", "habilidades_exigidas": "Força de vontade", "tem_experiencia": "Sim", "comunicacao": "3", "trabalho_equipe": "Gosto mas não me adapto", "planilhas": "0", "ia": "5", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Todos", "apps": "ChatGPT/Gemini;Canva;Google Sheets;Photoshop;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "IA", "suficiencia": "0", "obstaculo": "Muitos alunos", "habilidade_desejada": "PowerPoint", "area": "Ofícios técnicos", "obst_tema": "Ensino, estrutura e engajamento", "pedido_tema": "Office e planilhas"}, {"id": "PUB-09", "escola": "Pública", "idade": "", "acesso": "Celular;Computador compartilhado", "recursos": "5", "profissao": "Contabilidade / Administração / Secretária", "habilidades_exigidas": "Raciocínio, atenção, conhecimento, TI", "tem_experiencia": "Sim", "comunicacao": "5", "trabalho_equipe": "Gosto e me adapto", "planilhas": "3", "ia": "4", "prompts": "3", "linkedin": "Não tenho", "criatividade": "", "apps": "ChatGPT/Gemini;Canva;Excel;PowerPoint", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "0", "obstaculo": "Imposição de conteúdos que não serão exigidos", "habilidade_desejada": "Uso de planilhas / sites de uso profissional para CLT/PJ", "area": "Negócios e gestão", "obst_tema": "Conteúdo desatualizado ou pouco útil", "pedido_tema": "Office e planilhas"}, {"id": "PUB-10", "escola": "Pública", "idade": "18", "acesso": "Celular", "recursos": "2", "profissao": "Bancário", "habilidades_exigidas": "Sim, contar as notas", "tem_experiencia": "Não", "comunicacao": "5", "trabalho_equipe": "Gosto e me adapto", "planilhas": "3", "ia": "5", "prompts": "0", "linkedin": "Não tenho", "criatividade": "Nos trabalhos dos professores", "apps": "ChatGPT/Gemini;Canva;Google Sheets", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Nuvem", "suficiencia": "3", "obstaculo": "Coisas básicas, aquelas coisas que têm necessidade", "habilidade_desejada": "Administração", "area": "Negócios e gestão", "obst_tema": "Conteúdo desatualizado ou pouco útil", "pedido_tema": "Outros"}, {"id": "PUB-11", "escola": "Pública", "idade": "17", "acesso": "Celular", "recursos": "3", "profissao": "Mecânico", "habilidades_exigidas": "", "tem_experiencia": "", "comunicacao": "4", "trabalho_equipe": "Não gosto e não me adapto", "planilhas": "3", "ia": "3", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Não lembro", "apps": "ChatGPT/Gemini;Canva;Script", "aulas_tecnologia": "Frequentemente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "2", "obstaculo": "", "habilidade_desejada": "", "area": "Ofícios técnicos", "obst_tema": "", "pedido_tema": ""}, {"id": "PAR-01", "escola": "Particular", "idade": "17", "acesso": "Celular", "recursos": "5", "profissao": "Fisioterapia", "habilidades_exigidas": "O domínio científico,de diagnósticos e reabilitação e a dinâmica de lidar com o público ", "tem_experiencia": "Sim", "comunicacao": "3", "trabalho_equipe": "Gosto mas não me adapto", "planilhas": "1", "ia": "2", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Geralmente no meu trabalho,que seria como bailarina,em criação de coreografias", "apps": "ChatGPT/Gemini;Canva;Excel;Photoshop;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Pacote Office", "suficiencia": "1", "obstaculo": "Fica apenas no conteúdo,mas o contato com o mundo a fora é escasso.", "habilidade_desejada": "A dados,saber programar algumas coisas,coisas que geralmente precisa de curso ", "area": "Saúde", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Programação e dados"}, {"id": "PAR-02", "escola": "Particular", "idade": "18", "acesso": "Computador próprio", "recursos": "5", "profissao": "Animação", "habilidades_exigidas": "Experiência em softwares específicos da área e comunicação/ saber ter um bom relacionamento de trabalho ", "tem_experiencia": "Sim", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "2", "ia": "1", "prompts": "0", "linkedin": "Não tenho", "criatividade": "Quando a sala estava escolhendo uma camisa para o terceirão, eu fiz alguns designs de estampa para a sala", "apps": "Canva;Excel;PowerPoint;Blender", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "2", "obstaculo": "Aprender a conviver com pessoas que você não se dá bem ou não gosta", "habilidade_desejada": "Como não cair em golpes", "area": "Artes e design", "obst_tema": "Ensino, estrutura e engajamento", "pedido_tema": "Segurança digital"}, {"id": "PAR-03", "escola": "Particular", "idade": "17", "acesso": "Celular", "recursos": "5", "profissao": "Engenheiro Civil", "habilidades_exigidas": "Boa comunicação e boa base matemática,", "tem_experiencia": "Sim", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "2", "ia": "4", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Quando precisamos criar uma ideia e como vender essa ideia (start'up)", "apps": "ChatGPT/Gemini;Canva;Claude", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "1", "obstaculo": "A falta de aulas voltadas para o assunto.", "habilidade_desejada": "Aulas de Inteligência Artificial", "area": "Engenharia", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Inteligência artificial"}, {"id": "PAR-04", "escola": "Particular", "idade": "17", "acesso": "Computador próprio", "recursos": "5", "profissao": "Juíza", "habilidades_exigidas": "Sim. Conhecimentos advocatícios, justiça, imparcialidade, extrema leitura, minuciosidade...", "tem_experiencia": "Sim", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "4", "ia": "4", "prompts": "4", "linkedin": "Atualizado", "criatividade": "Nas oficinas de eletivas.", "apps": "ChatGPT/Gemini;Canva;Excel;Script;Adobe Acrobat;PowerPoint", "aulas_tecnologia": "Sempre", "aprendeu_na_escola": "Pacote Office", "suficiencia": "4", "obstaculo": "Carência de aulas voltadas às políticas públicas.", "habilidade_desejada": "Pacote office.", "area": "Educação, Direito e Humanas", "obst_tema": "Conteúdo desatualizado ou pouco útil", "pedido_tema": "Office e planilhas"}, {"id": "PAR-05", "escola": "Particular", "idade": "17", "acesso": "Celular", "recursos": "5", "profissao": "Medicina Veterinária", "habilidades_exigidas": "Sim! As principais habilidades e competências exigidas na Medicina Veterinária são: amor e respeito pelos animais, conhecimento técnico, responsabilidade, comunicação, trabalho em equipe, atenção aos detalhes, equilíbrio emocional e capacidade de resolver problemas.", "tem_experiencia": "Sim", "comunicacao": "3", "trabalho_equipe": "Gosto e me adapto", "planilhas": "3", "ia": "3", "prompts": "2", "linkedin": "Atualizado", "criatividade": "Um exemplo foi quando precisei realizar um trabalho escolar em grupo e usei a criatividade para organizar as ideias e elaborar uma apresentação diferente e interessante, facilitando o entendimento do conteúdo pelos colegas.", "apps": "ChatGPT/Gemini;Canva;Excel;PowerPoint", "aulas_tecnologia": "Às vezes", "aprendeu_na_escola": "Pacote Office", "suficiencia": "2", "obstaculo": "Na minha visão, o maior obstáculo é a falta de atividades práticas e de experiências que preparem os alunos para situações reais do mercado de trabalho.", "habilidade_desejada": "Gostaria de aprender mais sobre Excel, ferramentas digitais e inteligência artificial, para realizar tarefas profissionais com mais facilidade e me sentir mais preparada para o primeiro emprego.", "area": "Saúde", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Office e planilhas;Inteligência artificial"}, {"id": "PAR-06", "escola": "Particular", "idade": "17", "acesso": "Celular", "recursos": "5", "profissao": "engenheiro elétrico", "habilidades_exigidas": "conhecimento tecnico", "tem_experiencia": "Sim", "comunicacao": "5", "trabalho_equipe": "Gosto e me adapto", "planilhas": "4", "ia": "5", "prompts": "3", "linkedin": "Desatualizado", "criatividade": "projetos", "apps": "ChatGPT/Gemini;Power BI;AutoCAD;PowerPoint", "aulas_tecnologia": "Frequentemente", "aprendeu_na_escola": "Pacote Office;Nuvem;IA", "suficiencia": "1", "obstaculo": "o foco dos alunos ", "habilidade_desejada": "não há", "area": "Engenharia", "obst_tema": "Ensino, estrutura e engajamento", "pedido_tema": ""}, {"id": "PAR-07", "escola": "Particular", "idade": "17", "acesso": "Computador próprio", "recursos": "5", "profissao": "Direito / Nutrição", "habilidades_exigidas": "Não ", "tem_experiencia": "Não", "comunicacao": "4", "trabalho_equipe": "Gosto e me adapto", "planilhas": "1", "ia": "5", "prompts": "3", "linkedin": "Não tenho", "criatividade": "Em um trabalho sobre esportes", "apps": "ChatGPT/Gemini;Canva;PowerPoint", "aulas_tecnologia": "Raramente", "aprendeu_na_escola": "Nenhuma", "suficiencia": "3", "obstaculo": "Não ter matérias sobre isso, só ensinarem o básico ", "habilidade_desejada": "Mexer em Excel e entre outros", "area": "Educação, Direito e Humanas", "obst_tema": "Falta preparo prático para o mercado", "pedido_tema": "Office e planilhas"}];
+
+// ---------- ícones (desenhos genéricos, não são logotipos) ----------
+const P = (d, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
+const ICONS = {
+  school: P('<path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M10 19v-5h4v5"/>'),
+  compare: P('<rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="16" rx="2"/><path d="M10 12h4"/>'),
+  radar: P('<path d="M12 3l8 6-3 10H7L4 9z"/><path d="M12 8l4 3-1.5 4.5h-5L8 11z"/>'),
+  laptop: P('<rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19h20"/>'),
+  briefcase: P('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2"/><path d="M3 13h18"/>'),
+  quote: P('<path d="M7 11h4v6H5v-4c0-3 1-5 4-6"/><path d="M17 11h4v6h-6v-4c0-3 1-5 4-6"/>'),
+  info: P('<circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.5v.5"/>'),
+  cap: P('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>'),
+  wifi: P('<path d="M2 9a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 19.5v.01"/>'),
+  sparkle: P('<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>'),
+  grid: P('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>'),
+  doc: P('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/>'),
+  monitor: P('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
+  star: P('<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>'),
+  idcard: P('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c1-2 5-2 6 0"/><path d="M15 10h3M15 14h3"/>'),
+  team: P('<circle cx="8" cy="9" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M14 19c0-2 1.5-4 3-4s4 1.5 4 4"/>'),
+  barrier: P('<rect x="3" y="8" width="18" height="6" rx="1"/><path d="M7 8l-3 6M13 8l-3 6M19 8l-3 6"/><path d="M6 14v6M18 14v6"/>'),
+  bulb: P('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>'),
+  chart: P('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+  apps: P('<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>'),
+  phone: P('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'),
+  people: P('<circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5"/>'),
+  brush: P('<path d="M18 3l3 3-9 9-3-3z"/><path d="M9 12c-3 0-5 2-5 5 0 1-1 2-2 2 2 2 7 2 9-1 1-1.5 1-3.5-2-6z"/>'),
+  slides: P('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/><path d="M8 12l3-3 2 2 3-3"/>'),
+  bars: P('<rect x="4" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="16" y="3" width="4" height="17" rx="1"/>'),
+  image: P('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/>'),
+  compass: P('<circle cx="12" cy="5" r="2"/><path d="M11 7l-6 14M13 7l6 14"/><path d="M7 15h10"/>'),
+  code: P('<path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>'),
+  pdf: P('<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M8.5 16.5c2-1 4.5-5 3.5-6.5-1-1-1.5 2 .5 4s4 2 4 1-2.5-1-5 0"/>'),
+  gauge: P('<path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/><path d="M4 18h16"/>'),
+  pen: P('<path d="M12 3l6 8-6 10-6-10z"/><circle cx="12" cy="12" r="1.5"/><path d="M12 3v7.5"/>'),
+  cube: P('<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 12l9-5M12 12L3 7M12 12v10"/>'),
+  chat: P('<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/>'),
+};
+const APP_ICON = {
+  'ChatGPT/Gemini': ['sparkle', '#2a9d8f'], 'Canva': ['brush', '#7b5cd6'], 'Excel': ['grid', '#1e7a45'], 'Google Sheets': ['grid', '#33a35f'],
+  'PowerPoint': ['slides', '#d35230'], 'Power BI': ['bars', '#d99a00'], 'Photoshop': ['image', '#2f6fb5'], 'AutoCAD': ['compass', '#b03a2e'],
+  'Script': ['code', '#4a5468'], 'Adobe Acrobat': ['pdf', '#c62828'], 'Looker Studio': ['gauge', '#3b6fd8'], 'Illustrator': ['pen', '#d9822b'],
+  'Blender': ['cube', '#e87d0d'], 'Claude': ['chat', '#c96442'],
+};
+const OPT_ICON = {
+  'Celular': 'phone', 'Computador próprio': 'laptop', 'Computador compartilhado': 'people',
+  'Pacote Office': 'doc', 'Nuvem': 'wifi', 'IA': 'sparkle', 'Nenhuma': 'info',
+  'Office e planilhas': 'grid', 'Inteligência artificial': 'sparkle', 'Programação e dados': 'code', 'Segurança digital': 'info', 'Software técnico': 'compass', 'Comunicação': 'chat', 'Outros': 'apps',
+};
+document.getElementById('sheet-menu').innerHTML = document.querySelector('aside .menu').innerHTML;
+document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = ICONS[el.dataset.icon] || ''; });
+
+// ---------- dados ----------
+const SER = {
+  publica: { nome: 'Escola pública', curto: 'Pública', col: 'var(--pub)', rows: DATA.filter(r => r.escola === 'Pública') },
+  particular: { nome: 'Escola particular', curto: 'Particular', col: 'var(--par)', rows: DATA.filter(r => r.escola === 'Particular') },
+  juntas: { nome: 'As duas juntas', curto: 'Juntas', col: 'var(--jun)', rows: DATA },
+};
+const KEYS = ['publica', 'particular', 'juntas'];
+const SCALES = [
+  ['recursos', 'Recursos de acesso', 'Qualidade dos recursos que possui para acessar a internet'],
+  ['comunicacao', 'Comunicação', 'Habilidade de se comunicar de forma clara'],
+  ['planilhas', 'Planilhas', 'Organizar dados e fazer cálculos em planilhas'],
+  ['ia', 'Inteligência artificial', 'Domínio de ferramentas de IA para pesquisa e escrita'],
+  ['prompts', 'Prompts', 'Eficácia dos prompts nas buscas com IA'],
+  ['suficiencia', 'Escola basta', '“O que aprendo na escola é suficiente para conseguir um emprego”'],
+];
+const TEMAS = {
+  acesso: ['acesso', true, ['Celular', 'Computador próprio', 'Computador compartilhado']],
+  aulas: ['aulas_tecnologia', false, ['Nunca utilizamos', 'Raramente', 'Às vezes', 'Frequentemente', 'Sempre']],
+  aprendeu: ['aprendeu_na_escola', true, ['Pacote Office', 'Nuvem', 'IA', 'Nenhuma'], { 'Pacote Office': 'Pacote Office (Word, Excel, PowerPoint)', 'Nuvem': 'Nuvem (Google Drive, e-mail)', 'IA': 'Inteligência artificial', 'Nenhuma': 'Nenhuma (aprendi fora da escola)' }],
+  linkedin: ['linkedin', false, ['Não tenho', 'Desatualizado', 'Atualizado'], { 'Não tenho': 'Não tenho perfil', 'Desatualizado': 'Tenho, mas desatualizado', 'Atualizado': 'Tenho, atualizado' }],
+  equipe: ['trabalho_equipe', false, ['Gosto e me adapto', 'Gosto mas não me adapto', 'Não gosto e não me adapto']],
+  experiencia: ['tem_experiencia', false, ['Sim', 'Não']],
+  apps: ['apps', true, null],
+  obstaculo: ['obst_tema', false, ['Falta preparo prático para o mercado', 'Conteúdo desatualizado ou pouco útil', 'Ensino, estrutura e engajamento']],
+  pedido: ['pedido_tema', true, null],
+};
+const DEC = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const PCT = new Intl.NumberFormat('pt-BR', { style: 'percent', maximumFractionDigits: 0 });
+
+const medias = {};
+for (const [q, label, full] of SCALES) {
+  const row = { q, label, full, hist: {} };
+  for (const k of KEYS) {
+    const v = SER[k].rows.filter(r => r[q] !== '').map(r => Number(r[q]));
+    row[k] = v.reduce((a, b) => a + b, 0) / v.length;
+    row.hist[k] = [0, 1, 2, 3, 4, 5].map(n => v.filter(x => x === n).length / v.length);
+  }
+  medias[q] = row;
+}
+const dist = {};
+for (const tema in TEMAS) {
+  const [col, multi, fixed, labels] = TEMAS[tema];
+  const vals = r => r[col] ? (multi ? r[col].split(';') : [r[col]]) : [];
+  let opts = fixed;
+  if (!opts) {
+    const cnt = new Map();
+    DATA.forEach(r => vals(r).forEach(v => cnt.set(v, (cnt.get(v) || 0) + 1)));
+    opts = [...cnt.entries()].sort((a, b) => b[1] - a[1]).map(d => d[0]);
+  }
+  dist[tema] = opts.map(opcao => {
+    const row = { opcao, label: (labels && labels[opcao]) || opcao };
+    for (const k of KEYS) {
+      const resp = SER[k].rows.filter(r => vals(r).length);
+      row[k] = resp.filter(r => vals(r).includes(opcao)).length / resp.length;
+    }
+    return row;
+  });
+}
+const share = (tema, opcao, k) => dist[tema].find(r => r.opcao === opcao)[k];
+const AREAS = [['Saúde', '#0e7c86'], ['Engenharia', '#2f5fb3'], ['Educação, Direito e Humanas', '#7a3e9d'], ['Negócios e gestão', '#e2572b'], ['Ofícios técnicos', '#b07d1a'], ['Artes e design', '#3c8d4f']];
+const AREA_COL = Object.fromEntries(AREAS);
+
+// ---------- utilidades ----------
+const tip = document.getElementById('tip');
+function showTip(ev, html) { tip.innerHTML = html; tip.style.opacity = 1; moveTip(ev); }
+function moveTip(ev) { const w = tip.offsetWidth, h = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY + 14; if (x + w > innerWidth - 8) x = ev.clientX - w - 14; if (y + h > innerHeight - 8) y = ev.clientY - h - 14; tip.style.left = x + 'px'; tip.style.top = y + 'px'; }
+function hideTip() { tip.style.opacity = 0; }
+let tipTimer;
+function hoverable(el, html) {
+  el.addEventListener('mouseenter', e => showTip(e, html)); el.addEventListener('mousemove', moveTip); el.addEventListener('mouseleave', hideTip);
+  el.addEventListener('pointerup', e => { if (e.pointerType === 'mouse') return; showTip(e, html); clearTimeout(tipTimer); tipTimer = setTimeout(hideTip, 2500); });
+}
+const NS = 'http://www.w3.org/2000/svg';
+function S(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.append(e); return e; }
+function T(parent, x, y, s, attrs = {}) { const t = S('text', Object.assign({ x, y, 'font-size': 12, fill: 'var(--ink)', 'font-family': 'var(--body)' }, attrs), parent); t.textContent = s; return t; }
+function measure(svg, strs, size, weight = 500) { const t = T(svg, 0, 0, '', { 'font-size': size, 'font-weight': weight }); let w = 0; strs.forEach(s => { t.textContent = s; w = Math.max(w, t.getComputedTextLength()); }); t.remove(); return w; }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const cap = s => { s = String(s).trim().replace(/\s*\n\s*/g, ' ').replace(/\.$/, ''); return s.charAt(0).toUpperCase() + s.slice(1); };
+const grow = (el, w) => requestAnimationFrame(() => requestAnimationFrame(() => { el.style.width = w; }));
+const visible = { publica: true, particular: true, juntas: false };
+const activeKeys = () => KEYS.filter(k => visible[k]);
+document.querySelectorAll('[data-m]').forEach(el => { const [q, k] = el.dataset.m.split('.'); el.textContent = DEC.format(medias[q][k]); });
+document.querySelectorAll('[data-areakeys]').forEach(box => AREAS.forEach(([a, c]) => { const s = document.createElement('span'); s.innerHTML = `<i style="background:${c}"></i>${esc(a)}`; box.append(s); }));
+
+// legendas (ligar/desligar séries)
+document.querySelectorAll('[data-legend]').forEach(box => {
+  box.innerHTML = '<span class="lbl">Mostrar:</span>' + KEYS.map(k => `<button class="lg" aria-pressed="${visible[k]}" data-series="${k}"><i style="background:${SER[k].col}"></i>${SER[k].nome}</button>`).join('');
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-series]'); if (!b) return;
+  const k = b.dataset.series;
+  if (visible[k] && activeKeys().length === 1) return;
+  visible[k] = !visible[k];
+  document.querySelectorAll(`[data-series="${k}"]`).forEach(x => x.setAttribute('aria-pressed', visible[k]));
+  render(current);
+});
+
+// ---------- componentes ----------
+function kpiDefs() {
+  return [
+    { label: 'A escola prepara para o emprego', sub: 'nota média de 0 a 5', type: 'mean', get: k => medias.suficiencia[k], max: 5, tab: 'habilidades', icon: 'cap', c: '#9a6a00', bg: 'var(--sun-soft)' },
+    { label: 'Qualidade do acesso à internet', sub: 'nota média de 0 a 5', type: 'mean', get: k => medias.recursos[k], max: 5, tab: 'escola', icon: 'wifi', c: 'var(--plum)', bg: 'var(--plum-soft)' },
+    { label: 'Domínio de inteligência artificial', sub: 'nota média de 0 a 5', type: 'mean', get: k => medias.ia[k], max: 5, tab: 'habilidades', icon: 'sparkle', c: '#1f7a72', bg: '#d9f0ec' },
+    { label: 'Planilhas (Excel / Sheets)', sub: 'nota média de 0 a 5', type: 'mean', get: k => medias.planilhas[k], max: 5, tab: 'habilidades', icon: 'grid', c: '#1e7a45', bg: 'var(--leaf-soft)' },
+    { label: 'Aprendeu o Pacote Office na escola', sub: '% dos alunos', type: 'pct', get: k => share('aprendeu', 'Pacote Office', k), max: 1, tab: 'escola', icon: 'doc', c: '#2f5fb3', bg: '#dfe8f8' },
+    { label: 'Aulas usam tecnologia com frequência', sub: '% “frequentemente” ou “sempre”', type: 'pct', get: k => share('aulas', 'Frequentemente', k) + share('aulas', 'Sempre', k), max: 1, tab: 'escola', icon: 'monitor', c: '#9a6a00', bg: 'var(--sun-soft)' },
+    { label: 'Já tem experiência com a profissão', sub: '% dos que responderam', type: 'pct', get: k => share('experiencia', 'Sim', k), max: 1, tab: 'futuro', icon: 'star', c: 'var(--leaf)', bg: 'var(--leaf-soft)' },
+    { label: 'Tem perfil no LinkedIn', sub: '% com perfil, atualizado ou não', type: 'pct', get: k => 1 - share('linkedin', 'Não tenho', k), max: 1, tab: 'futuro', icon: 'idcard', c: 'var(--plum)', bg: 'var(--plum-soft)' },
+  ];
+}
+const fmtK = (kp, v) => kp.type === 'pct' ? PCT.format(v) : DEC.format(v);
+function kpiTop(kp) { return `<div class="kpi-top"><span class="icon" style="background:${kp.bg};color:${kp.c}">${ICONS[kp.icon]}</span><span class="kpi-label">${esc(kp.label)}<br><span class="muted small" style="font-weight:500">${esc(kp.sub)}</span></span></div>`; }
+function buildKpisJuntas() {
+  const box = document.getElementById('kpis-juntas'); box.replaceChildren();
+  kpiDefs().forEach(kp => {
+    const a = kp.get('publica'), b = kp.get('particular'), j = kp.get('juntas');
+    const diff = b - a, tie = Math.abs(diff) < (kp.type === 'pct' ? 0.05 : 0.2);
+    const lead = tie ? 'tie' : diff > 0 ? 'particular' : 'publica';
+    const gap = kp.type === 'pct' ? Math.round(Math.abs(diff) * 100) + ' p.p.' : DEC.format(Math.abs(diff)) + (Math.abs(diff) >= 2 ? ' pontos' : ' ponto');
+    const el = document.createElement('button'); el.className = 'kpi'; el.style.setProperty('--cols', 3);
+    el.innerHTML = kpiTop(kp) +
+      `<div class="kpi-vals">${KEYS.map(k => `<div class="kv ${k}"><span class="who-s">${SER[k].curto}</span><span class="big">${fmtK(kp, kp.get(k))}</span></div>`).join('')}</div>
+       <div class="gauge">${KEYS.map(k => `<div><b style="background:${SER[k].col}" data-w="${kp.get(k) / kp.max}"></b></div>`).join('')}</div>
+       <span class="verdict ${lead}">${tie ? 'Empate técnico entre as escolas' : (lead === 'publica' ? 'Pública' : 'Particular') + ' à frente por ' + gap}</span>`;
+    el.addEventListener('click', () => go(kp.tab));
+    box.append(el);
+  });
+}
+
+function distRows(box, tema, keys, opts = {}) {
+  box.replaceChildren();
+  box.classList.toggle('solo', keys.length === 1);
+  let rows = dist[tema];
+  if (opts.sortBy) rows = [...rows].sort((x, y) => y[opts.sortBy] - x[opts.sortBy]);
+  if (opts.hideZero) rows = rows.filter(r => keys.some(k => r[k] > 0));
+  rows.forEach(r => {
+    const row = document.createElement('div'); row.className = 'row';
+    const lab = document.createElement('div'); lab.className = 'lab';
+    if (OPT_ICON[r.opcao]) { const ic = document.createElement('span'); ic.className = 'ico-inline'; ic.style.background = '#e9e4da'; ic.style.color = 'var(--ink)'; ic.innerHTML = ICONS[OPT_ICON[r.opcao]]; lab.append(ic); }
+    lab.append(document.createTextNode(r.label));
+    const bars = document.createElement('div'); bars.className = 'bars';
+    keys.forEach(k => {
+      const line = document.createElement('div'); line.className = 'bline';
+      const bar = document.createElement('div'); bar.className = 'bar'; bar.style.background = opts.color || SER[k].col;
+      const val = document.createElement('span'); val.className = 'bv'; val.textContent = PCT.format(r[k]);
+      line.append(bar, val); bars.append(line);
+      hoverable(line, `<b>${esc(r.label)}</b><br>${SER[k].nome}: ${PCT.format(r[k])}`);
+      grow(bar, `calc(${r[k] * 100}% - ${r[k] * 3.2}rem)`);
+    });
+    row.append(lab, bars); box.append(row);
+  });
+}
+
+function appGrid(box, keys) {
+  box.replaceChildren();
+  let rows = dist.apps;
+  if (keys.length === 1) rows = rows.filter(r => r[keys[0]] > 0).sort((a, b) => b[keys[0]] - a[keys[0]]);
+  rows.forEach(r => {
+    const [ic, col] = APP_ICON[r.opcao] || ['apps', '#4a5468'];
+    const el = document.createElement('div'); el.className = 'appt';
+    el.innerHTML = `<span class="logo" style="background:${col}">${ICONS[ic]}</span><div style="min-width:0"><div class="nm">${esc(r.opcao)}</div><div class="bars"></div></div>`;
+    const bars = el.querySelector('.bars');
+    keys.forEach(k => {
+      const line = document.createElement('div'); line.className = 'bline';
+      const bar = document.createElement('div'); bar.className = 'bar'; bar.style.background = SER[k].col; bar.style.height = keys.length === 1 ? '10px' : '8px';
+      const val = document.createElement('span'); val.className = 'bv'; val.textContent = PCT.format(r[k]);
+      line.append(bar, val); bars.append(line);
+      hoverable(line, `<b>${esc(r.opcao)}</b><br>${SER[k].nome}: ${PCT.format(r[k])} usam ou já usaram`);
+      grow(bar, `calc(${r[k] * 100}% - ${r[k] * 2.6}rem)`);
+    });
+    box.append(el);
+  });
+}
+
+function stack(st, k) {
+  st.replaceChildren();
+  const rows = SER[k].rows;
+  AREAS.forEach(([a, c]) => {
+    const v = rows.filter(r => r.area === a).length / rows.length;
+    if (!v) return;
+    const s = document.createElement('span'); s.style.background = c; s.textContent = v >= .12 ? PCT.format(v) : '';
+    hoverable(s, `<b>${esc(a)}</b><br>${PCT.format(v)} dos alunos (${SER[k].nome.toLowerCase()})`);
+    st.append(s); grow(s, v * 100 + '%');
+  });
+}
+
+function quoteCard(r, field, showTema) {
+  const k = r.escola === 'Pública' ? 'publica' : 'particular';
+  const card = document.createElement('figure'); card.className = 'q ' + k;
+  const bq = document.createElement('blockquote'); bq.textContent = cap(r[field]);
+  const meta = document.createElement('figcaption'); meta.className = 'meta';
+  meta.innerHTML = `<span class="s ${k}">${SER[k].nome}</span><span>Quer ser: ${esc(cap(r.profissao))}</span>` + (showTema && r.obst_tema ? `<span>${esc(r.obst_tema)}</span>` : '');
+  card.append(bq, meta);
+  return card;
+}
+const goodText = (r, f) => r[f] && r[f].trim().replace(/[.\s]/g, '').length > 2 && !/^não( há)?\.?$/i.test(r[f].trim());
+
+// ---------- páginas de cada escola ----------
+const PERFIL = {
+  publica: {
+    titulo: 'Escola pública',
+    resumo: 'Alunos que chegam à internet principalmente pelo celular, confiantes no uso de IA, mas que veem pouca ligação entre o que aprendem e o primeiro emprego. Pedem, acima de tudo, Excel e Pacote Office.',
+    destaques: [
+      ['phone', 'Celular como porta de entrada', k => `${PCT.format(share('acesso', 'Celular', k))} marcaram o celular como meio de acesso à internet.`],
+      ['sparkle', 'Confiança em IA', k => `Nota média de ${DEC.format(medias.ia[k])} em domínio de ferramentas de IA, a maior entre as habilidades.`],
+      ['grid', 'Office fora da escola', k => `Só ${PCT.format(share('aprendeu', 'Pacote Office', k))} dizem ter aprendido o Pacote Office na escola; ${PCT.format(share('pedido', 'Office e planilhas', k))} pedem Office e planilhas.`],
+    ],
+  },
+  particular: {
+    titulo: 'Escola particular',
+    resumo: 'Alunos com bons recursos de acesso e mais contato com o Pacote Office na escola, que já conhecem as exigências da profissão. Pedem mais prática e contato com o mercado de trabalho.',
+    destaques: [
+      ['wifi', 'Acesso de qualidade', k => `Nota média de ${DEC.format(medias.recursos[k])} para os recursos de acesso à internet.`],
+      ['star', 'Experiência com a profissão', k => `${PCT.format(share('experiencia', 'Sim', k))} dizem já ter experiência com o que a profissão exige.`],
+      ['barrier', 'Falta de prática', k => `${PCT.format(share('obstaculo', 'Falta preparo prático para o mercado', k))} apontam a falta de prática e de contato com o mercado como maior obstáculo.`],
+    ],
+  },
+};
+function buildSchool(sec) {
+  const k = sec.dataset.school, pf = PERFIL[k], col = SER[k].col;
+  const soft = k === 'publica' ? 'var(--pub-soft)' : 'var(--par-soft)';
+  const deep = k === 'publica' ? 'var(--pub-deep)' : 'var(--par-deep)';
+  sec.innerHTML = `
+    <div class="hero ${k === 'publica' ? 'pub' : 'par'}">
+      <span class="hero-ic">${ICONS.school}</span>
+      <span class="kicker">Concepção dos alunos · ${k === 'publica' ? 'formulário em papel' : 'formulário pelo celular'}</span>
+      <h2>${pf.titulo}</h2>
+      <p>${esc(pf.resumo)}</p>
+    </div>
+    <div class="callouts">${pf.destaques.map(([ic, t, f]) => `<div class="callout" style="border-color:${col}"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS[ic]}</span><h4>${esc(t)}</h4></div><p>${esc(f(k))}</p></div>`).join('')}</div>
+    <div class="slide-head"><h3>Indicadores</h3><p class="muted small">Em azul-escuro, o resultado das duas escolas juntas para comparação.</p></div>
+    <div class="kpis" data-kpis></div>
+    <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.radar}</span><h3>Autoavaliação de 0 a 5</h3></div><p class="muted small">Nota média em cada pergunta. O traço azul-escuro marca a média das duas escolas juntas.</p><div class="chart" data-scales></div></div>
+    <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.apps}</span><h3>Aplicativos que usa ou já usou</h3></div><p class="muted small">Percentual de alunos que marcou cada aplicativo.</p><div class="appgrid" data-apps-solo></div></div>
+    <div class="grid-2">
+      <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.wifi}</span><h3>Meio de acesso à internet</h3></div><div class="rows" data-solo="acesso"></div></div>
+      <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.monitor}</span><h3>Tecnologia nas aulas</h3></div><div class="rows" data-solo="aulas"></div></div>
+      <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.cap}</span><h3>Aprendeu na escola</h3></div><div class="rows" data-solo="aprendeu"></div></div>
+      <div class="card"><div class="card-h"><span class="ic" style="background:${soft};color:${deep}">${ICONS.idcard}</span><h3>Perfil no LinkedIn</h3></div><div class="rows" data-solo="linkedin"></div></div>
+    </div>
+    <div class="card tone-leaf">
+      <div class="card-h"><span class="ic" style="background:#fff;color:var(--leaf)">${ICONS.briefcase}</span><h3>Profissões desejadas</h3></div>
+      <div class="stack" data-stack-solo></div>
+      <div class="chips" data-chips></div>
+    </div>
+    <div class="grid-2">
+      <div class="card tone-plum"><div class="card-h"><span class="ic" style="background:#fff;color:var(--plum)">${ICONS.barrier}</span><h3>Maior obstáculo da escola</h3></div><p class="muted small">Respostas abertas agrupadas por tema.</p><div class="rows" data-solo="obstaculo"></div></div>
+      <div class="card tone-sun"><div class="card-h"><span class="ic" style="background:#fff;color:#9a6a00">${ICONS.bulb}</span><h3>O que querem aprender</h3></div><p class="muted small">Respostas abertas agrupadas por tema.</p><div class="rows" data-solo="pedido"></div></div>
+    </div>
+    <div class="slide-head"><h3>Nas palavras dos alunos</h3><p class="muted small">Algumas respostas sobre o maior obstáculo e o que gostariam de aprender.</p></div>
+    <div class="quotes two" data-quotes-solo></div>`;
+}
+function renderSchool(sec) {
+  const k = sec.dataset.school;
+  // indicadores
+  const kb = sec.querySelector('[data-kpis]'); kb.replaceChildren();
+  kpiDefs().forEach(kp => {
+    const v = kp.get(k), j = kp.get('juntas');
+    const el = document.createElement('div'); el.className = 'kpi';
+    el.innerHTML = kpiTop(kp) + `<div class="kv solo ${k}"><span class="big">${fmtK(kp, v)}</span></div>
+      <div class="gauge"><div><b style="background:${SER[k].col}" data-w="${v / kp.max}"></b></div><div><b style="background:var(--jun)" data-w="${j / kp.max}"></b></div></div>
+      <span class="ref">As duas juntas: <b>${fmtK(kp, j)}</b></span>`;
+    kb.append(el);
+  });
+  sec.querySelectorAll('.gauge b').forEach(b => grow(b, b.dataset.w * 100 + '%'));
+  // escalas
+  const box = sec.querySelector('[data-scales]'); box.replaceChildren();
+  const W = Math.max(280, box.clientWidth || 520), rowH = 44, H = SCALES.length * rowH + 18;
+  const svg = S('svg', { viewBox: `0 0 ${W} ${H}` }, box);
+  const lw = Math.min(W * .45, measure(svg, SCALES.map(s => s[1]), 13, 600) + 14), x0 = lw, x1 = W - 40, x = v => x0 + (x1 - x0) * v / 5;
+  for (let i = 0; i <= 5; i++) { S('line', { x1: x(i), x2: x(i), y1: 14, y2: H, stroke: '#ece7de' }, svg); T(svg, x(i), 10, String(i), { 'text-anchor': 'middle', 'font-size': 10, fill: 'var(--ink-3)' }); }
+  SCALES.forEach(([q, label, full], i) => {
+    const y = 20 + i * rowH, m = medias[q];
+    T(svg, 0, y + 15, label, { 'font-size': 13, 'font-weight': 600 });
+    S('rect', { x: x0, y, width: x1 - x0, height: 20, rx: 4, fill: '#f3efe8' }, svg);
+    const r = S('rect', { x: x0, y, width: 0, height: 20, rx: 4, fill: SER[k].col, style: 'cursor:pointer' }, svg);
+    requestAnimationFrame(() => { r.style.transition = 'width .8s cubic-bezier(.2,.8,.2,1)'; r.setAttribute('width', x(m[k]) - x0); });
+    S('line', { x1: x(m.juntas), x2: x(m.juntas), y1: y - 4, y2: y + 24, stroke: 'var(--jun)', 'stroke-width': 3, 'stroke-linecap': 'round' }, svg);
+    T(svg, x(m[k]) + 6, y + 15, DEC.format(m[k]), { 'font-size': 12, 'font-weight': 700, fill: SER[k].col });
+    hoverable(r, `<b>${esc(full)}</b><br>${SER[k].nome}: ${DEC.format(m[k])}<br>As duas juntas: ${DEC.format(m.juntas)}`);
+  });
+  appGrid(sec.querySelector('[data-apps-solo]'), [k]);
+  sec.querySelectorAll('[data-solo]').forEach(b => distRows(b, b.dataset.solo, [k], { hideZero: b.dataset.solo === 'pedido' }));
+  stack(sec.querySelector('[data-stack-solo]'), k);
+  const chips = sec.querySelector('[data-chips]'); chips.replaceChildren();
+  SER[k].rows.forEach(r => { const c = document.createElement('span'); c.className = 'chip'; c.innerHTML = `<i style="background:${AREA_COL[r.area]}"></i>${esc(cap(r.profissao))}`; hoverable(c, `<b>${esc(r.area)}</b>`); chips.append(c); });
+  const qb = sec.querySelector('[data-quotes-solo]'); qb.replaceChildren();
+  const pick = (f, n) => SER[k].rows.filter(r => goodText(r, f)).sort((a, b) => b[f].length - a[f].length).slice(0, n);
+  pick('obstaculo', 4).forEach(r => qb.append(quoteCard(r, 'obstaculo', true)));
+  pick('habilidade_desejada', 2).forEach(r => { const c = quoteCard(r, 'habilidade_desejada', false); c.querySelector('.meta').insertAdjacentHTML('beforeend', '<span>O que quer aprender</span>'); qb.append(c); });
+}
+
+// ---------- gráficos do comparativo ----------
+function drawRadar() {
+  const el = document.getElementById('radar'); el.replaceChildren();
+  const W = Math.max(300, el.clientWidth || 480), H = Math.min(W, 420);
+  const svg = S('svg', { viewBox: `0 0 ${W} ${H}` }, el);
+  const lw = measure(svg, SCALES.map(s => s[1]), 12, 600);
+  const R = Math.max(70, Math.min(H / 2 - 34, W / 2 - lw - 16)), cx = W / 2, cy = H / 2, n = SCALES.length;
+  const ang = i => -Math.PI / 2 + i * 2 * Math.PI / n, pt = (i, v) => [cx + Math.cos(ang(i)) * R * v / 5, cy + Math.sin(ang(i)) * R * v / 5];
+  for (let lv = 5; lv >= 1; lv--) S('polygon', { points: SCALES.map((_, i) => pt(i, lv).join(',')).join(' '), fill: lv % 2 ? '#faf7f2' : '#fff', stroke: '#e4ded4' }, svg);
+  SCALES.forEach(([q, label], i) => {
+    const [x, y] = pt(i, 5); S('line', { x1: cx, y1: cy, x2: x, y2: y, stroke: '#e4ded4' }, svg);
+    const [lx, ly] = pt(i, 5.55), c = Math.cos(ang(i));
+    T(svg, lx, ly + 4, label, { 'text-anchor': Math.abs(c) < .2 ? 'middle' : c > 0 ? 'start' : 'end', 'font-weight': 600, fill: 'var(--ink-2)' });
+  });
+  activeKeys().forEach(k => {
+    const pts = SCALES.map(([q], i) => pt(i, medias[q][k]));
+    const poly = S('polygon', { points: pts.map(p => p.join(',')).join(' '), fill: SER[k].col, 'fill-opacity': k === 'juntas' ? .08 : .18, stroke: SER[k].col, 'stroke-width': 2.5, 'stroke-dasharray': k === 'juntas' ? '6 4' : '', 'stroke-linejoin': 'round' }, svg);
+    poly.style.transformOrigin = `${cx}px ${cy}px`;
+    poly.animate([{ transform: 'scale(.2)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 700, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    pts.forEach((p, i) => { const c = S('circle', { cx: p[0], cy: p[1], r: 6, fill: SER[k].col, stroke: '#fff', 'stroke-width': 2, style: 'cursor:pointer' }, svg); const m = medias[SCALES[i][0]]; hoverable(c, `<b>${esc(m.full)}</b><br>${SER[k].nome}: ${DEC.format(m[k])}`); });
+  });
+}
+function drawDumbbell() {
+  const el = document.getElementById('dumbbell'); el.replaceChildren();
+  const rows = SCALES.map(([q]) => medias[q]);
+  const W = Math.max(280, el.clientWidth || 520), narrow = W < 440, rowH = narrow ? 56 : 52, top = 24, H = top + rows.length * rowH;
+  const svg = S('svg', { viewBox: `0 0 ${W} ${H}` }, el);
+  const lw = narrow ? 0 : measure(svg, rows.map(r => r.label), 13, 600) + 14;
+  const x0 = lw + 20, x1 = W - 34, x = v => x0 + (x1 - x0) * v / 5;
+  for (let i = 0; i <= 5; i++) { S('line', { x1: x(i), x2: x(i), y1: top - 6, y2: H - 6, stroke: '#ece7de' }, svg); T(svg, x(i), 11, String(i), { 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--ink-3)' }); }
+  rows.forEach((r, i) => {
+    const cy = top + i * rowH + (narrow ? 36 : rowH / 2);
+    T(svg, 0, narrow ? top + i * rowH + 14 : cy + 4, r.label, { 'font-size': 13, 'font-weight': 600 });
+    const a = r.publica, b = r.particular;
+    if (visible.publica && visible.particular) {
+      const ln = S('line', { x1: x(a), x2: x(a), y1: cy, y2: cy, stroke: Math.abs(b - a) >= .5 ? 'var(--sun)' : '#cfc7ba', 'stroke-width': 6, 'stroke-linecap': 'round' }, svg);
+      requestAnimationFrame(() => { ln.style.transition = 'all .8s cubic-bezier(.2,.8,.2,1)'; ln.setAttribute('x2', x(b)); });
+    }
+    if (visible.juntas) {
+      const jx = x(r.juntas), d = S('path', { d: `M${jx} ${cy - 8} L${jx + 8} ${cy} L${jx} ${cy + 8} L${jx - 8} ${cy}Z`, fill: 'var(--jun)', stroke: '#fff', 'stroke-width': 1.5, style: 'cursor:pointer' }, svg);
+      hoverable(d, `<b>${esc(r.full)}</b><br>As duas juntas: ${DEC.format(r.juntas)}`);
+    }
+    const close = Math.abs(x(a) - x(b)) < 46;
+    [[a, 'publica'], [b, 'particular']].forEach(([v, k], j) => {
+      if (!visible[k]) return;
+      const other = j ? a : b, c = SER[k].col;
+      const dot = S('circle', { cx: x(v), cy, r: 8, fill: c, stroke: '#fff', 'stroke-width': 2, style: 'cursor:pointer' }, svg);
+      hoverable(dot, `<b>${esc(r.full)}</b><br>${SER[k].nome}: ${DEC.format(v)}`);
+      let anchor = 'middle', dx = 0, dy = j ? 23 : -13;
+      if (!close && visible.publica && visible.particular) { if (v < other) { anchor = 'end'; dx = -13; dy = 4; } else { anchor = 'start'; dx = 13; dy = 4; } }
+      T(svg, x(v) + dx, cy + dy, DEC.format(v), { 'text-anchor': anchor, 'font-size': 12, 'font-weight': 700, fill: c });
+    });
+  });
+}
+let histQ = 'suficiencia';
+const hq = document.getElementById('histq');
+SCALES.forEach(([q, label]) => {
+  const b = document.createElement('button'); b.textContent = label; b.dataset.q = q; b.setAttribute('aria-pressed', q === histQ);
+  b.addEventListener('click', () => { histQ = q; hq.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.q === q)); drawHist(); });
+  hq.append(b);
+});
+function drawHist() {
+  const el = document.getElementById('hist'); el.replaceChildren();
+  const m = medias[histQ], keys = activeKeys();
+  const W = Math.max(280, el.clientWidth || 800), H = 240, padL = 36, padB = 34, top = 18;
+  const svg = S('svg', { viewBox: `0 0 ${W} ${H}` }, el);
+  const maxV = Math.max(...keys.map(k => Math.max(...m.hist[k]))), ymax = Math.ceil(maxV * 10) / 10 || 1;
+  const y = v => top + (H - padB - top) * (1 - v / ymax);
+  for (let t = 0; t <= ymax + 1e-9; t += ymax > .5 ? .2 : .1) { S('line', { x1: padL, x2: W, y1: y(t), y2: y(t), stroke: '#efe6cf' }, svg); T(svg, padL - 6, y(t) + 4, PCT.format(t), { 'text-anchor': 'end', 'font-size': 10, fill: 'var(--ink-3)' }); }
+  const band = (W - padL) / 6, bw = Math.min(30, (band - 16) / keys.length);
+  for (let n = 0; n <= 5; n++) {
+    const cx = padL + band * n + band / 2;
+    T(svg, cx, H - 12, 'Nota ' + n, { 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 600, fill: 'var(--ink-2)' });
+    keys.forEach((k, j) => {
+      const v = m.hist[k][n], x = cx - (keys.length * (bw + 4)) / 2 + j * (bw + 4);
+      const r = S('rect', { x, y: H - padB, width: bw, height: 0, rx: 3, fill: SER[k].col, style: 'cursor:pointer' }, svg);
+      requestAnimationFrame(() => { r.style.transition = 'all .7s cubic-bezier(.2,.8,.2,1)'; r.setAttribute('y', y(v)); r.setAttribute('height', H - padB - y(v)); });
+      if (v > 0) T(svg, x + bw / 2, y(v) - 5, PCT.format(v), { 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 700, fill: SER[k].col });
+      hoverable(r, `<b>Nota ${n}</b><br>${SER[k].nome}: ${PCT.format(v)} dos alunos`);
+    });
+  }
+}
+
+// falas (comparativo)
+const fq = { escola: '', tema: 'obstaculo' };
+function setupSeg(id, key) { const box = document.getElementById(id); box.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { fq[key] = b.dataset.v; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawQuotes(); })); }
+setupSeg('fq-escola', 'escola'); setupSeg('fq-tema', 'tema');
+function drawQuotes() {
+  const box = document.getElementById('quotes'); box.replaceChildren();
+  const rows = DATA.filter(r => (!fq.escola || r.escola === fq.escola) && goodText(r, fq.tema));
+  if (!rows.length) { box.innerHTML = '<p class="empty">Nenhuma resposta para esse filtro.</p>'; return; }
+  rows.forEach((r, i) => { const c = quoteCard(r, fq.tema, fq.tema === 'obstaculo'); c.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 350, delay: i * 30, fill: 'backwards' }); box.append(c); });
+}
+
+// ---------- navegação ----------
+document.querySelectorAll('[data-school]').forEach(buildSchool);
+const order = [...document.querySelectorAll('[data-panel]')].map(s => s.id);
+let current = 'publica';
+function render(id) {
+  const sec = document.getElementById(id);
+  if (sec.dataset.school) renderSchool(sec);
+  if (id === 'juntas') { buildKpisJuntas(); sec.querySelectorAll('.gauge b').forEach(b => grow(b, b.dataset.w * 100 + '%')); }
+  if (id === 'habilidades') { drawRadar(); drawDumbbell(); drawHist(); }
+  if (id === 'escola' || id === 'futuro') sec.querySelectorAll('[data-dist]').forEach(b => distRows(b, b.dataset.dist, activeKeys()));
+  if (id === 'escola') appGrid(sec.querySelector('[data-apps]'), activeKeys());
+  if (id === 'futuro') sec.querySelectorAll('[data-stack]').forEach(st => stack(st, st.dataset.stack));
+  if (id === 'vozes') drawQuotes();
+}
+function go(id, push = true) {
+  if (!order.includes(id)) id = order[0];
+  current = id;
+  document.querySelectorAll('[data-panel]').forEach(s => { s.hidden = s.id !== id; });
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === id));
+  const tab = document.querySelector(`.tab[data-tab="${id}"]`); if (tab && tab.scrollIntoView && innerWidth <= 900) tab.scrollIntoView({ inline: 'center', block: 'nearest' });
+  hideTip(); render(id);
+  if (push) { try { history.replaceState(null, '', '#' + id); } catch (e) {} }
+  scrollTo({ top: 0 });
+  const ix = order.indexOf(id), tb = document.querySelector(`aside .tab[data-tab="${id}"]`);
+  document.getElementById('m-num').textContent = ix + 1;
+  document.getElementById('m-title').textContent = tb ? tb.textContent.replace(/^\d+/, '').trim() : '';
+  let g = tb && tb.previousElementSibling; while (g && !g.classList.contains('group')) g = g.previousElementSibling;
+  document.getElementById('m-group').textContent = g ? g.textContent : '';
+  document.querySelectorAll('#m-dots i').forEach((d, i) => d.classList.toggle('on', i === ix));
+  document.getElementById('m-prev').disabled = ix === 0;
+  document.getElementById('m-next').disabled = ix === order.length - 1;
+  document.getElementById('sheet').hidden = true;
+  document.getElementById('prev').disabled = order.indexOf(id) === 0;
+  document.getElementById('next').disabled = order.indexOf(id) === order.length - 1;
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.tab)));
+const step = d => go(order[Math.min(order.length - 1, Math.max(0, order.indexOf(current) + d))]);
+document.getElementById('prev').addEventListener('click', () => step(-1));
+document.getElementById('next').addEventListener('click', () => step(1));
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea') || !chooser.hidden) return;
+  if (['ArrowRight'].includes(e.key)) { e.preventDefault(); step(1); }
+  if (['ArrowLeft'].includes(e.key)) { e.preventDefault(); step(-1); }
+});
+const pres = document.getElementById('present');
+pres.addEventListener('click', async () => {
+  try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); } catch (e) {}
+});
+document.addEventListener('fullscreenchange', () => {
+  const on = !!document.fullscreenElement;
+  document.body.classList.toggle('presenting', on);
+  pres.textContent = on ? '✕ Sair da tela cheia' : '▶ Apresentar em tela cheia';
+  render(current);
+});
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => render(current), 150); });
+addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && h !== current) go(h, false); });
+// ---------- versão computador / celular ----------
+const dots = document.getElementById('m-dots'); order.forEach(() => dots.append(document.createElement('i')));
+document.getElementById('m-prev').addEventListener('click', () => step(-1));
+document.getElementById('m-next').addEventListener('click', () => step(1));
+const sheet = document.getElementById('sheet');
+document.getElementById('m-menu').addEventListener('click', () => { sheet.hidden = false; });
+sheet.addEventListener('click', e => { if (e.target === sheet) sheet.hidden = true; });
+const chooser = document.getElementById('chooser');
+const smallScreen = matchMedia('(max-width: 760px)').matches || matchMedia('(pointer: coarse) and (max-width: 1024px)').matches;
+document.querySelector(`.choice[data-mode="${smallScreen ? 'mobile' : 'desktop'}"]`).classList.add('rec');
+document.querySelector('.choice.rec .badge').hidden = false;
+let mode = null;
+function setMode(m) {
+  mode = m;
+  document.body.classList.toggle('mobile', m === 'mobile');
+  chooser.hidden = true; sheet.hidden = true;
+  go(current, false);
+}
+document.querySelectorAll('.choice').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+document.querySelectorAll('[data-switch]').forEach(b => b.addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); chooser.hidden = false; sheet.hidden = true; }));
+// deslizar o dedo para trocar de seção (versão celular)
+let sx = null, sy = 0;
+document.querySelector('main').addEventListener('touchstart', e => { if (!document.body.classList.contains('mobile') || e.target.closest('.seg, .chart, .stack')) { sx = null; return; } sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+document.querySelector('main').addEventListener('touchend', e => {
+  if (sx === null) return;
+  const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) step(dx < 0 ? 1 : -1);
+}, { passive: true });
+document.querySelector('.choice.rec').focus();
+go(location.hash.slice(1) || order[0], false);
+</script>
+</body>
+</html>
